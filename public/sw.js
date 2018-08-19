@@ -1,7 +1,7 @@
 importScripts('/src/js/idb.js');
 importScripts('/src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'static-v24';
+var CACHE_STATIC_NAME = 'static-v25';
 var CACHE_DYNAMIC_NAME = 'dynamic-v2';
 var STATIC_FILES = [
   '/',
@@ -147,24 +147,29 @@ self.addEventListener('sync', function(event) {
     event.waitUntil(
       readAllData('sync-posts').then(function(data) {
         for (var dt of data) {
-          fetch('https://kiyamuda-pwa.firebaseio.com/posts.json', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json'
-            },
-            body: JSON.stringify({
-              id: dt.id,
-              title: dt.title,
-              location: dt.location,
-              image:
-                'https://firebasestorage.googleapis.com/v0/b/kiyamuda-pwa.appspot.com/o/sf-boat.jpg?alt=media&token=d3eb6aa1-d934-4632-8668-6540b4bafe54'
-            })
-          })
+          fetch(
+            'https://us-central1-kiyamuda-pwa.cloudfunctions.net/storePostData',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+              },
+              body: JSON.stringify({
+                id: dt.id,
+                title: dt.title,
+                location: dt.location,
+                image:
+                  'https://firebasestorage.googleapis.com/v0/b/kiyamuda-pwa.appspot.com/o/sf-boat.jpg?alt=media&token=d3eb6aa1-d934-4632-8668-6540b4bafe54'
+              })
+            }
+          )
             .then(function(res) {
               console.log('Sent data', res);
               if (res.ok) {
-                deleteItemFromData('sync-posts', dt.id);
+                res.json().then(function(resData) {
+                  deleteItemFromData('sync-posts', resData.id);
+                });
               }
             })
             .catch(function(err) {
