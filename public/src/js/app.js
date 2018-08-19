@@ -26,10 +26,14 @@ window.addEventListener('beforeinstallprompt', function(event) {
 });
 
 function displayConfirmNotification() {
-  var options = {
-    body: 'You successfully subscribed to our Kiyamuda Notification Service!'
-  };
-  new Notification('Successfully Subscribsed!', options);
+  if ('serviceWorker' in navigator) {
+    var options = {
+      body: 'You successfully subscribed to our Kiyamuda Notification Service!'
+    };
+    navigator.serviceWorker.ready.then(function(swreg) {
+      swreg.showNotification('Successfully Subscribsed!', options);
+    });
+  }
 }
 
 function askForNotificationPermission() {
