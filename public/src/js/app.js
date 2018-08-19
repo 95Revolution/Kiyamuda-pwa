@@ -28,7 +28,13 @@ window.addEventListener('beforeinstallprompt', function(event) {
 function displayConfirmNotification() {
   if ('serviceWorker' in navigator) {
     var options = {
-      body: 'You successfully subscribed to our Kiyamuda Notification Service!'
+      body: 'You successfully subscribed to our Kiyamuda Notification Service!',
+      icon: '/src/images/icons/app-icon-96x96.png',
+      image: '/src/images/sf-boat.jpg',
+      dir: 'ltr',
+      lang: 'en-US',
+      vibrate: [100, 50, 200],
+      badge: '/src/images/icons/app-icon-96x96.png'
     };
     navigator.serviceWorker.ready.then(function(swreg) {
       swreg.showNotification('Successfully Subscribsed!', options);
