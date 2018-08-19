@@ -61,13 +61,42 @@ function configurePushSub() {
     return;
   }
 
+  var reg;
   navigator.serviceWorker.ready
     .then(function(swreg) {
+      reg = swreg;
       return swreg.pushManager.getSubscription();
     })
     .then(function(sub) {
       if (sub === null) {
+        // Create a new subscription
+        var vapidPublicKey =
+          'BAXm1RWltzk9YUJf40ZznL2z75oAZA6eYbQK_TL8OlP15Y53lXsm7lysuDqIxDEID6JNooL3DsEKHQlDTtV2D8o';
+        var convertedVapidPublicKey = urlBase64ToUint8Array(vapidPublicKey);
+        return reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: convertedVapidPublicKey
+        });
+      } else {
       }
+    })
+    .then(function(newSub) {
+      return fetch('https://kiyamuda-pwa.firebaseio.com/subscriptions.json', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify(newSub)
+      });
+    })
+    .then(function(res) {
+      if (res.ok) {
+        displayConfirmNotification();
+      }
+    })
+    .catch(function(err) {
+      console.log(err);
     });
 }
 
