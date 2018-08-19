@@ -124,7 +124,7 @@ if ('indexedDB' in window) {
 }
 
 function sendData() {
-  fetch('https://kiyamuda-pwa.firebaseio.com/posts.json', {
+  fetch('https://us-central1-kiyamuda-pwa.cloudfunctions.net/storePostData', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
