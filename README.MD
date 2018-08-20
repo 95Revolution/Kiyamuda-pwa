@@ -5,6 +5,7 @@
 
 <p align="center">
 <a href="https://github.com/95Revolution/Kiyamuda-pwa/blob/master/LICENSE"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
+<a href="https://discord.gg/xjSKPg"><img src="https://img.shields.io/badge/chat-on%20discord-7289da.svg" alt="Discord"></a>
 </p>
 
 # About Kiyamuda
