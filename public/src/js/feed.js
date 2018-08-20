@@ -13,6 +13,45 @@ var captureButton = document.querySelector('#capture-btn');
 var imagePicker = document.querySelector('#image-picker');
 var imagePickerArea = document.querySelector('#pick-image');
 var picture;
+var locationBtn = document.querySelector('#location-btn');
+var locationLoader = document.querySelector('#location-loader');
+var fetchedLocation;
+
+locationBtn.addEventListener('click', function(event) {
+  if (!('geolocation' in navigator)) {
+    return;
+  }
+
+  locationBtn.style.display = 'none';
+  locationLoader.style.display = 'block';
+
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      locationBtn.style.display = 'inline';
+      locationLoader.style.display = 'none';
+      fetchedLocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+      locationInput.value = 'In Colombo';
+      document.querySelector('#manual-location').classList.add('is-focused');
+    },
+    function(err) {
+      console.log(err);
+      locationBtn.style.display = 'inline';
+      locationLoader.style.display = 'none';
+      alert("Couldn't fetch location, please enter manually!");
+      fetchedLocation = null;
+    },
+    { timeout: 7000 }
+  );
+});
+
+function initializeLocation() {
+  if (!('geolocation' in navigator)) {
+    locationBtn.style.display = 'none';
+  }
+}
 
 function initializeMedia() {
   if (!('mediaDevices' in navigator)) {
@@ -52,6 +91,10 @@ function initializeMedia() {
     picture = dataURItoBlob(canvasElement.toDataURL());
   });
 
+  imagePicker.addEventListener('change', function(event) {
+    picture = event.target.files[0];
+  });
+
   navigator.mediaDevices
     .getUserMedia({ video: true })
     .then(function(stream) {
@@ -68,6 +111,7 @@ function openCreatePostModal() {
   // setTimeout(function() {
   createPostArea.style.transform = 'translateY(0)';
   initializeMedia();
+  initializeLocation();
   // }, 1);
   if (deferredPrompt) {
     deferredPrompt.prompt();
@@ -99,6 +143,8 @@ function closeCreatePostModal() {
   imagePicker.style.display = 'none';
   videoPlayer.style.display = 'none';
   canvasElement.style.display = 'none';
+  locationBtn.style.display = 'inline';
+  locationLoader.style.display = 'none';
   // createPostArea.style.display = 'none';
 }
 
@@ -188,6 +234,8 @@ function sendData() {
   postData.append('id', id);
   postData.append('title', titleInput.value);
   postData.append('location', locationInput.value);
+  postData.append('rawLocationLat', fetchedLocation.lat);
+  postData.append('rawLocationLng', fetchedLocation.lng);
   postData.append('file', picture, id + '.png');
   fetch('https://us-central1-kiyamuda-pwa.cloudfunctions.net/storePostData', {
     method: 'POST',
@@ -214,7 +262,8 @@ form.addEventListener('submit', function(event) {
         id: new Date().toISOString(),
         title: titleInput.value,
         location: locationInput.value,
-        picture: picture
+        picture: picture,
+        rawLocation: fetchedLocation
       };
       writeData('sync-posts', post)
         .then(function() {
