@@ -6,6 +6,7 @@
 <p align="center">
 <a href="https://github.com/95Revolution/Kiyamuda-pwa/blob/master/LICENSE"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 <a href="https://discord.gg/p9gHBZj"><img src="https://img.shields.io/badge/chat-on%20discord-7289da.svg" alt="Discord"></a>
+<a href="https://join.slack.com/t/95revolution/shared_invite/enQtNDI0NDAxODg3NzgzLTdkMTZmMDM3N2E3MThlZTQwY2EzMjAzMWZjOTYwZGY2MjcyMzE4YmFiMzkzOTk1Yjg4MjI4ZWM1ZTc0NDI1ZWY"><img src="https://img.shields.io/badge/chat-on%20slack-7289da.svg" alt="Slack"></a>
 </p>
 
 # About Kiyamuda
